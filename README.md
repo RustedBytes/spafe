@@ -1,6 +1,9 @@
 # Spafe
 
-Native Rust implementation of the core `spafe` audio feature extraction APIs.
+Native Rust implementation of the core
+[`spafe`](https://pypi.org/project/spafe/) audio feature extraction APIs and
+[`jenellefeather/chcochleagram`](https://github.com/jenellefeather/chcochleagram)
+cochleagram routines.
 
 The crate provides filter banks, spectrograms, cepstral features, spectral
 descriptors, frequency estimators, cochleagram generation, preprocessing helpers,
@@ -21,8 +24,9 @@ cargo +nightly build --features portable-simd
 
 ## Python Bindings
 
-The crate exposes a PyO3 extension module through maturin. Python functions use
-plain Python lists for one-dimensional signals and nested lists for matrices.
+The crate exposes a PyO3 extension module through maturin. The Python package is
+published as `spafe-rs` and imports as `spafe`. Python functions use plain
+Python lists for one-dimensional signals and nested lists for matrices.
 
 Install locally in a virtual environment:
 
