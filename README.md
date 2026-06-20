@@ -1,5 +1,9 @@
 # Spafe
 
+[![CI](https://github.com/RustedBytes/spafe/actions/workflows/rust.yml/badge.svg)](https://github.com/RustedBytes/spafe/actions/workflows/rust.yml)
+[![Crates.io Version](https://img.shields.io/crates/v/spafe)](https://crates.io/crates/spafe)
+[![PyPI - Version](https://img.shields.io/pypi/v/spafe-rs)](https://pypi.org/project/spafe-rs/)
+
 Native Rust implementation of the core
 [`spafe`](https://pypi.org/project/spafe/) audio feature extraction APIs and
 [`jenellefeather/chcochleagram`](https://github.com/jenellefeather/chcochleagram)
