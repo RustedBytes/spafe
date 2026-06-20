@@ -144,15 +144,7 @@ pub mod preprocessing {
 
     /// Apply pre-emphasis to an input signal.
     pub fn pre_emphasis(sig: &[f64], pre_emph_coeff: f64) -> Vec<f64> {
-        if sig.is_empty() {
-            return Vec::new();
-        }
-        let mut out = Vec::with_capacity(sig.len());
-        out.push(sig[0]);
-        for i in 1..sig.len() {
-            out.push(sig[i] - pre_emph_coeff * sig[i - 1]);
-        }
-        out
+        crate::simd::pre_emphasis(sig, pre_emph_coeff)
     }
 
     /// Split a one-dimensional signal into overlapping frames.
@@ -166,9 +158,11 @@ pub mod preprocessing {
         let mut frames = Array2::<f64>::zeros((nrows, stride_length));
         for r in 0..nrows {
             let start = r * stride_step;
-            for c in 0..stride_length {
-                frames[(r, c)] = a[start + c];
-            }
+            frames
+                .row_mut(r)
+                .as_slice_mut()
+                .expect("standard-layout rows are contiguous")
+                .copy_from_slice(&a[start..start + stride_length]);
         }
         Ok(frames)
     }
@@ -192,8 +186,12 @@ pub mod preprocessing {
         let window = window_values(frame_len, win_type);
         let mut out = frames.clone();
         for mut row in out.axis_iter_mut(Axis(0)) {
-            for (sample, w) in row.iter_mut().zip(window.iter()) {
-                *sample *= *w;
+            if let Some(samples) = row.as_slice_mut() {
+                crate::simd::mul_assign(samples, &window);
+            } else {
+                for (sample, w) in row.iter_mut().zip(window.iter()) {
+                    *sample *= *w;
+                }
             }
         }
         out
@@ -331,7 +329,11 @@ pub mod cepstral {
 
     fn std_all(x: &Matrix) -> f64 {
         let mean = x.mean().unwrap_or(0.0);
-        let var = x.iter().map(|v| (v - mean).powi(2)).sum::<f64>() / x.len() as f64;
+        let var = if let Some(values) = x.as_slice_memory_order() {
+            crate::simd::sum_squared_offset(values, mean) / values.len() as f64
+        } else {
+            x.iter().map(|v| (v - mean).powi(2)).sum::<f64>() / x.len() as f64
+        };
         let std = var.sqrt();
         if std == 0.0 { f64::EPSILON } else { std }
     }
@@ -354,9 +356,11 @@ pub mod spectral {
                 dst.re = *src;
             }
             fft.process(&mut buffer);
-            for c in 0..bins {
-                out[(r, c)] = buffer[c].norm();
-            }
+            let mut out_row = out.row_mut(r);
+            let values = out_row
+                .as_slice_mut()
+                .expect("standard-layout rows are contiguous");
+            crate::simd::write_complex_norms(&buffer[..bins], 1.0, values);
         }
         out
     }

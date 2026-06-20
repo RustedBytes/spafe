@@ -366,7 +366,11 @@ pub(crate) fn cepstral_from_spectrogram(
 
     if opts.use_energy && ceps.ncols() > 0 {
         for (row_idx, row) in spectrogram.fft_magnitude.axis_iter(Axis(0)).enumerate() {
-            let energy = row.iter().map(|v| v * v / opts.nfft as f64).sum::<f64>();
+            let energy = if let Some(values) = row.as_slice() {
+                crate::simd::sum_squares_scaled(values, 1.0 / opts.nfft as f64)
+            } else {
+                row.iter().map(|v| v * v / opts.nfft as f64).sum::<f64>()
+            };
             ceps[(row_idx, 0)] = replace_zero(energy).ln();
         }
     }
@@ -393,12 +397,42 @@ pub(crate) fn spectrogram_with_fbanks(
     )?;
     let windows = crate::utils::preprocessing::windowing(&frames, opts.window.win_type);
     let fft_magnitude = crate::utils::spectral::fft_magnitude(&windows, opts.nfft);
-    let power = fft_magnitude.mapv(|v| v * v / opts.nfft as f64);
-    let features = power.dot(&fbanks.t());
+    let features = weighted_power_projection(&fft_magnitude, fbanks, 1.0 / opts.nfft as f64);
     Ok(SpectrogramOutput {
         features,
         fft_magnitude,
     })
+}
+
+pub(crate) fn weighted_power_projection(magnitude: &Matrix, fbanks: &Matrix, scale: f64) -> Matrix {
+    #[cfg(not(feature = "portable-simd"))]
+    {
+        let power = magnitude.mapv(|value| value * value * scale);
+        power.dot(&fbanks.t())
+    }
+
+    #[cfg(feature = "portable-simd")]
+    {
+        let mut out = Array2::<f64>::zeros((magnitude.nrows(), fbanks.nrows()));
+        for (r, mag_row) in magnitude.axis_iter(Axis(0)).enumerate() {
+            for (c, filter_row) in fbanks.axis_iter(Axis(0)).enumerate() {
+                out[(r, c)] = match (mag_row.as_slice(), filter_row.as_slice()) {
+                    (Some(mag), Some(filter)) => {
+                        crate::simd::dot_square_weighted(mag, filter, scale)
+                    }
+                    _ => {
+                        mag_row
+                            .iter()
+                            .zip(filter_row.iter())
+                            .map(|(value, weight)| value * value * weight)
+                            .sum::<f64>()
+                            * scale
+                    }
+                };
+            }
+        }
+        out
+    }
 }
 
 impl From<&FeatureOptions> for FilterBankOptions {

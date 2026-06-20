@@ -12,6 +12,13 @@ and deterministic SVG visualization helpers.
 cargo build
 ```
 
+The crate also has an opt-in portable SIMD path for hot numeric kernels. Because
+`std::simd` is still unstable, this feature currently requires nightly Rust:
+
+```bash
+cargo +nightly build --features portable-simd
+```
+
 ## Test
 
 ```bash

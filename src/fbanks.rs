@@ -289,8 +289,12 @@ pub fn gammatone_filter_banks(
 fn apply_scaling(mut fbank: Matrix, scale: Scale) -> Result<Matrix> {
     let scaling = scale_fbank(scale, fbank.nrows());
     for r in 0..fbank.nrows() {
-        for c in 0..fbank.ncols() {
-            fbank[(r, c)] *= scaling[(r, 0)];
+        if let Some(row) = fbank.row_mut(r).as_slice_mut() {
+            crate::simd::scale_assign(row, scaling[(r, 0)]);
+        } else {
+            for c in 0..fbank.ncols() {
+                fbank[(r, c)] *= scaling[(r, 0)];
+            }
         }
     }
     Ok(fbank)

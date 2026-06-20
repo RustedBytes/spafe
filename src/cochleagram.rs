@@ -380,10 +380,14 @@ pub fn compute_subbands(
         .rows()
         .into_iter()
         .map(|row| {
-            row.iter()
-                .zip(spectrum.iter())
-                .map(|(weight, bin)| *bin * *weight)
-                .collect::<Vec<_>>()
+            if let Some(weights) = row.as_slice() {
+                crate::simd::complex_mul_real(&spectrum, weights)
+            } else {
+                row.iter()
+                    .zip(spectrum.iter())
+                    .map(|(weight, bin)| *bin * *weight)
+                    .collect::<Vec<_>>()
+            }
         })
         .collect())
 }
@@ -592,9 +596,9 @@ fn hilbert_envelope(subband: &[Complex64], signal_size: usize) -> Vec<f64> {
         *dst = *src;
     }
     ifft.process(&mut buffer);
-    buffer
+    crate::simd::complex_norms(&buffer, 1.0 / signal_size as f64)
         .into_iter()
-        .map(|value| (value / signal_size as f64).norm().max(1e-8))
+        .map(|value| value.max(1e-8))
         .collect()
 }
 
@@ -703,11 +707,7 @@ fn convolve_rows_valid(
         }
         for out_col in 0..out_cols {
             let start = out_col * stride;
-            out[(row, out_col)] = kernel
-                .iter()
-                .enumerate()
-                .map(|(idx, coeff)| padded[start + idx] * coeff)
-                .sum();
+            out[(row, out_col)] = crate::simd::dot(&padded[start..start + kernel.len()], kernel);
         }
     }
     out

@@ -293,9 +293,12 @@ pub fn pncc(sig: &[f64], opts: &FeatureOptions, power: f64) -> Result<Matrix> {
     )?;
     let windows = crate::utils::preprocessing::windowing(&frames, opts.window.win_type);
     let fft = crate::utils::spectral::fft_magnitude(&windows, opts.nfft);
-    let p = fft
-        .mapv(|v| v.powf(power) / opts.nfft as f64)
-        .dot(&fbanks.t());
+    let p = if power == 2.0 {
+        weighted_power_projection(&fft, &fbanks, 1.0 / opts.nfft as f64)
+    } else {
+        fft.mapv(|v| v.powf(power) / opts.nfft as f64)
+            .dot(&fbanks.t())
+    };
     let q = medium_time_power_calculation(&p, 2);
     let r = asymmetric_noise_suppression_with_temporal_masking(&q, 0.0);
     let s = weight_smoothing(&r, &q, opts.nfilts, 4);
@@ -552,14 +555,13 @@ fn full_autocorr(frame: &[f64]) -> Vec<f64> {
     let mut out = vec![0.0; 2 * n - 1];
     for (idx, value) in out.iter_mut().enumerate() {
         let lag = idx as isize - (n as isize - 1);
-        let mut sum = 0.0;
-        for i in 0..n {
-            let j = i as isize + lag;
-            if (0..n as isize).contains(&j) {
-                sum += frame[i] * frame[j as usize];
-            }
-        }
-        *value = sum;
+        *value = if lag >= 0 {
+            let lag = lag as usize;
+            crate::simd::dot(&frame[..n - lag], &frame[lag..])
+        } else {
+            let lag = (-lag) as usize;
+            crate::simd::dot(&frame[lag..], &frame[..n - lag])
+        };
     }
     out
 }
@@ -610,9 +612,11 @@ fn ifft_abs_rows(input: &Matrix, nfft: usize) -> Matrix {
             dst.re = *src;
         }
         fft.process(&mut buffer);
-        for c in 0..nfft {
-            out[(r, c)] = (buffer[c] / nfft as f64).norm();
-        }
+        let mut out_row = out.row_mut(r);
+        let values = out_row
+            .as_slice_mut()
+            .expect("standard-layout rows are contiguous");
+        crate::simd::write_complex_norms(&buffer, 1.0 / nfft as f64, values);
     }
     out
 }

@@ -6,12 +6,7 @@ pub fn compute_difference(x: &[f64], tau_max: usize) -> Vector {
     let w = x.len();
     let mut out = Vec::with_capacity(tau_max.min(w));
     for tau in 0..tau_max.min(w) {
-        let mut sum = 0.0;
-        for j in 0..w - tau {
-            let d = x[j] - x[j + tau];
-            sum += d * d;
-        }
-        out.push(sum);
+        out.push(crate::simd::sum_squared_diff(&x[..w - tau], &x[tau..]));
     }
     Vector::from_vec(out)
 }
