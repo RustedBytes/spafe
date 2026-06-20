@@ -97,6 +97,9 @@ python -m pip install notebook matplotlib
 jupyter notebook notebooks
 ```
 
+They cover feature extraction, filter banks, pitch tracking, cochleagrams,
+spectrogram variants, conversion helpers, and option tuning.
+
 ## Basic Usage
 
 ```rust
