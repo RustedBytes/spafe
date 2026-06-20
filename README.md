@@ -79,6 +79,17 @@ cargo run --example cochleagram
 open target/cochleagram.svg
 ```
 
+Python examples live in `examples/python`, use matplotlib, and write outputs to
+`target/python-examples`:
+
+```bash
+python -m pip install matplotlib
+python examples/python/features.py
+python examples/python/fbanks.py
+python examples/python/pitch.py
+python examples/python/cochleagram.py
+```
+
 ## Basic Usage
 
 ```rust
