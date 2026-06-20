@@ -11,6 +11,16 @@ documentation = "https://docs.rs/spafe"
 readme = "README.md"
 keywords = ["audio", "speech", "features", "mfcc", "cochleagram"]
 categories = ["multimedia::audio", "science"]
+exclude = [
+    ".github/",
+    ".gitignore",
+    "examples/python/",
+    "notebooks/",
+    "py.typed",
+    "pyproject.toml",
+    "spafe.pyi",
+    "uv.lock",
+]
 
 [lib]
 crate-type = ["rlib", "cdylib"]
