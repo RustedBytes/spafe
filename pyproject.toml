@@ -35,3 +35,4 @@ examples = ["matplotlib>=3.8", "numpy>=2"]
 [tool.maturin]
 features = ["python-extension"]
 module-name = "spafe"
+include = ["spafe.pyi", "py.typed"]
