@@ -10,7 +10,7 @@ requires-python = ">=3.9"
 license = "BSD-3-Clause"
 
 [project.optional-dependencies]
-examples = ["matplotlib>=3.8"]
+examples = ["matplotlib>=3.8", "numpy>=2"]
 
 [tool.maturin]
 features = ["python-extension"]

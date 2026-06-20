@@ -93,12 +93,13 @@ python examples/python/cochleagram.py
 Interactive notebooks live in `notebooks`:
 
 ```bash
-python -m pip install notebook matplotlib
+python -m pip install notebook matplotlib numpy
 jupyter notebook notebooks
 ```
 
 They cover feature extraction, filter banks, pitch tracking, cochleagrams,
-spectrogram variants, conversion helpers, and option tuning.
+spectrogram variants, conversion helpers, parameter sensitivity, option tuning,
+performance, and visualization/export/classification recipes.
 The real-audio notebook uses `notebooks/sample_uk.opus` and requires `ffmpeg`.
 
 ## Basic Usage
