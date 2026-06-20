@@ -1,0 +1,12 @@
+[package]
+name = "spafe"
+version = "0.1.0"
+edition = "2024"
+description = "Rust port of the spafe audio feature extraction library and jenellefeather/chcochleagram"
+license = "BSD-3-Clause"
+
+[dependencies]
+ndarray = "0.17"
+num-complex = "0.4"
+rustfft = "6"
+thiserror = "2"
