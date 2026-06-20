@@ -1,6 +1,6 @@
 [package]
 name = "spafe"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "Rust port of the spafe audio feature extraction library and jenellefeather/chcochleagram"
 authors = ["Yehor Smoliakov <egorsmkv@gmail.com>"]

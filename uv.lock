@@ -1287,8 +1287,8 @@ wheels = [
 ]
 
 [[package]]
-name = "spafe"
-version = "0.1.0"
+name = "spafe-rs"
+version = "0.1.1"
 source = { editable = "." }
 
 [package.optional-dependencies]
