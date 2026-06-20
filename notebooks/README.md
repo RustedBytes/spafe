@@ -10,6 +10,9 @@ maturin develop
 jupyter notebook notebooks
 ```
 
+The real-audio notebook also requires the `ffmpeg` command-line tool to decode
+the Opus sample.
+
 Available notebooks:
 
 - `01_getting_started_features.ipynb`: synthetic signal, MFCC/GFCC, Mel spectrogram, and spectral descriptors.
@@ -19,3 +22,4 @@ Available notebooks:
 - `05_advanced_cepstral_features.ipynb`: IMFCC, LFCC, BFCC, MSRCC, NGCC, PSRCC, PNCC, LPCC, PLP, RPLP, and CQCC.
 - `06_spectrogram_variants.ipynb`: Mel, linear, Bark, and ERB spectrograms plus inverse Mel filter banks.
 - `07_converters_and_options.ipynb`: Hertz/Mel/Bark/ERB converters and option tuning examples.
+- `08_real_audio_sample_uk.ipynb`: load `sample_uk.opus`, then compute features, pitch, cochleagram, and descriptors on real audio.

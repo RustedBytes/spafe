@@ -99,6 +99,7 @@ jupyter notebook notebooks
 
 They cover feature extraction, filter banks, pitch tracking, cochleagrams,
 spectrogram variants, conversion helpers, and option tuning.
+The real-audio notebook uses `notebooks/sample_uk.opus` and requires `ffmpeg`.
 
 ## Basic Usage
 
