@@ -90,6 +90,13 @@ python examples/python/pitch.py
 python examples/python/cochleagram.py
 ```
 
+Interactive notebooks live in `notebooks`:
+
+```bash
+python -m pip install notebook matplotlib
+jupyter notebook notebooks
+```
+
 ## Basic Usage
 
 ```rust
