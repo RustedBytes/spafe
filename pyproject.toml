@@ -36,3 +36,10 @@ examples = ["matplotlib>=3.8", "numpy>=2"]
 features = ["python-extension"]
 module-name = "spafe"
 include = ["spafe.pyi", "py.typed"]
+exclude = [
+    ".github/**/*",
+    ".gitignore",
+    "examples/**/*",
+    "notebooks/**/*",
+    "uv.lock",
+]
