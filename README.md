@@ -19,6 +19,42 @@ The crate also has an opt-in portable SIMD path for hot numeric kernels. Because
 cargo +nightly build --features portable-simd
 ```
 
+## Python Bindings
+
+The crate exposes a PyO3 extension module through maturin. Python functions use
+plain Python lists for one-dimensional signals and nested lists for matrices.
+
+Install locally in a virtual environment:
+
+```bash
+python -m pip install maturin
+maturin develop
+```
+
+Build a wheel:
+
+```bash
+python -m pip install build
+python -m build --wheel
+```
+
+Basic Python usage:
+
+```python
+import math
+import spafe
+
+fs = 16_000
+sig = [math.sin(2.0 * math.pi * 440.0 * n / fs) for n in range(fs)]
+opts = spafe.FeatureOptions(fs=fs, nfft=256, nfilts=24)
+
+ceps = spafe.mfcc(sig, opts)
+fbanks, centers = spafe.mel_filter_banks(spafe.FilterBankOptions(nfft=256))
+
+print(len(ceps), len(ceps[0]))
+print(len(fbanks), len(centers))
+```
+
 ## Test
 
 ```bash

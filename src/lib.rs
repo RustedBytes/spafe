@@ -9,6 +9,8 @@
 #![cfg_attr(feature = "portable-simd", feature(portable_simd))]
 
 mod core;
+#[cfg(feature = "python")]
+mod python;
 mod simd;
 
 pub use core::{

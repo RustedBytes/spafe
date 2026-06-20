@@ -5,9 +5,13 @@ edition = "2024"
 description = "Rust port of the spafe audio feature extraction library and jenellefeather/chcochleagram"
 license = "BSD-3-Clause"
 
+[lib]
+crate-type = ["rlib", "cdylib"]
+
 [dependencies]
 ndarray = "0.17"
 num-complex = "0.4"
+pyo3 = { version = "0.29", optional = true }
 rustfft = "6"
 thiserror = "2"
 
@@ -16,3 +20,5 @@ default = []
 # Enables Rust's portable SIMD API for hot numeric kernels. This currently
 # requires a nightly compiler because `std::simd` is still feature-gated.
 portable-simd = []
+python = ["dep:pyo3"]
+python-extension = ["python", "pyo3/extension-module"]
