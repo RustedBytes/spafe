@@ -117,7 +117,7 @@ pub fn get_dominant_frequencies(
             .map(|(i, v)| (i, (v / nfft as f64).powi(2) / nfft as f64))
             .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
             .unwrap();
-        let freq = idx as f64 * fs as f64 / row.len() as f64;
+        let freq = idx as f64 * fs as f64 / nfft as f64;
         let rounded = (freq * 1000.0).round() / 1000.0;
         if !only_positive || rounded >= 0.0 {
             freqs.push(rounded);

@@ -41,7 +41,7 @@ pub mod converters {
             BarkConversionApproach::Schroeder => 7.0 * (f / 650.0).asinh(),
             BarkConversionApproach::Terhardt => 13.3 * ((f * 0.75) / 1000.0).atan(),
             BarkConversionApproach::Zwicker => 8.7 + 14.2 * (f / 1000.0).log10(),
-            BarkConversionApproach::Traunmueller => ((26.28 * f) / (1.0 + 1960.0)) - 0.53,
+            BarkConversionApproach::Traunmueller => ((26.28 * f) / (f + 1960.0)) - 0.53,
         }
     }
 
@@ -51,7 +51,7 @@ pub mod converters {
             BarkConversionApproach::Wang => 600.0 * (fb / 6.0).sinh(),
             BarkConversionApproach::Tjomov => 600.0 * (fb / 6.7).sinh() - 20.0,
             BarkConversionApproach::Schroeder => 650.0 * (fb / 7.0).sinh(),
-            BarkConversionApproach::Terhardt => (1000.0 / 0.75) * (fb / 13.0).tan(),
+            BarkConversionApproach::Terhardt => (1000.0 / 0.75) * (fb / 13.3).tan(),
             BarkConversionApproach::Zwicker => 10.0_f64.powf(((fb - 8.7) / 14.2) + 3.0),
             BarkConversionApproach::Traunmueller => {
                 let fi = if fb < 2.0 {
@@ -61,7 +61,7 @@ pub mod converters {
                 } else {
                     fb
                 };
-                1960.0 * ((fi + 0.53) / (26.28 - fi))
+                1960.0 * ((fi + 0.53) / (26.28 - (fi + 0.53)))
             }
         }
     }
