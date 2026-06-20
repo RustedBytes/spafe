@@ -1,0 +1,56 @@
+name: Rust tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "src/**"
+      - "examples/*.rs"
+      - ".github/workflows/rust.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  stable:
+    name: Stable Rust
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - name: Check formatting
+        run: cargo fmt --check
+
+      - name: Check default features
+        run: cargo check --locked --all-targets
+
+      - name: Run tests
+        run: cargo test --locked --all-targets
+
+  portable-simd:
+    name: Portable SIMD
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install nightly Rust
+        uses: dtolnay/rust-toolchain@nightly
+
+      - name: Check portable-simd
+        run: cargo +nightly check --locked --features portable-simd --all-targets
+
+      - name: Run portable-simd tests
+        run: cargo +nightly test --locked --features portable-simd --all-targets
