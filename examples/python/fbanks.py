@@ -19,7 +19,9 @@ def main() -> None:
     write_matrix_csv(target / "linear_fbanks.csv", fbanks)
     plot_filter_bank(target / "linear_fbanks.png", fbanks, freqs, "Linear Filter Bank")
 
-    print(f"filter bank: {len(fbanks)} filters x {len(fbanks[0]) if fbanks else 0} bins")
+    print(
+        f"filter bank: {len(fbanks)} filters x {len(fbanks[0]) if fbanks else 0} bins"
+    )
     print(f"first centers: {[round(value, 3) for value in centers[:5]]}")
     print(f"wrote outputs to {target}")
 

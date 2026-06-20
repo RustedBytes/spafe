@@ -29,7 +29,12 @@ def main() -> None:
     write_vector_csv(
         target / "yin.csv",
         ["time", "pitch", "harmonic_rate", "argmin"],
-        [[time, pitch, rate, argmin] for time, pitch, rate, argmin in zip(times, pitches, harmonic_rates, argmins)],
+        [
+            [time, pitch, rate, argmin]
+            for time, pitch, rate, argmin in zip(
+                times, pitches, harmonic_rates, argmins
+            )
+        ],
     )
     write_vector_csv(
         target / "dominant_frequencies.csv",

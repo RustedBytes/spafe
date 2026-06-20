@@ -5,9 +5,29 @@ build-backend = "maturin"
 [project]
 name = "spafe"
 version = "0.1.0"
-description = "Python bindings for the Rust spafe audio feature extraction crate"
+description = "Rust port of the spafe audio feature extraction library and jenellefeather/chcochleagram"
+readme = "README.md"
 requires-python = ">=3.9"
 license = "BSD-3-Clause"
+authors = [
+    { name = "Yehor Smoliakov", email = "egorsmkv@gmail.com" },
+]
+keywords = ["audio", "speech", "features", "mfcc", "cochleagram"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Rust",
+    "Topic :: Multimedia :: Sound/Audio :: Analysis",
+    "Topic :: Scientific/Engineering",
+]
+
+[project.urls]
+Homepage = "https://github.com/RustedBytes/spafe"
+Repository = "https://github.com/RustedBytes/spafe"
+Documentation = "https://docs.rs/spafe"
 
 [project.optional-dependencies]
 examples = ["matplotlib>=3.8", "numpy>=2"]

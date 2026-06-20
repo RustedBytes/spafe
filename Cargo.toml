@@ -3,7 +3,14 @@ name = "spafe"
 version = "0.1.0"
 edition = "2024"
 description = "Rust port of the spafe audio feature extraction library and jenellefeather/chcochleagram"
+authors = ["Yehor Smoliakov <egorsmkv@gmail.com>"]
 license = "BSD-3-Clause"
+repository = "https://github.com/RustedBytes/spafe"
+homepage = "https://github.com/RustedBytes/spafe"
+documentation = "https://docs.rs/spafe"
+readme = "README.md"
+keywords = ["audio", "speech", "features", "mfcc", "cochleagram"]
+categories = ["multimedia::audio", "science"]
 
 [lib]
 crate-type = ["rlib", "cdylib"]

@@ -36,7 +36,9 @@ def main() -> None:
 
     cols = len(output.cochleagram[0]) if output.cochleagram else 0
     print(f"cochleagram: {len(output.cochleagram)} filters x {cols} frames")
-    print(f"first center frequencies: {[round(value, 3) for value in output.center_freqs[:5]]}")
+    print(
+        f"first center frequencies: {[round(value, 3) for value in output.center_freqs[:5]]}"
+    )
     print(f"wrote outputs to {target}")
 
 

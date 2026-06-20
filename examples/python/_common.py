@@ -5,6 +5,7 @@ import math
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 from matplotlib import pyplot as plt
 
@@ -19,10 +20,7 @@ def sine_wave(
     fs: int = 16_000,
 ) -> list[float]:
     samples = int(seconds * fs)
-    return [
-        math.sin(2.0 * math.pi * frequency * idx / fs)
-        for idx in range(samples)
-    ]
+    return [math.sin(2.0 * math.pi * frequency * idx / fs) for idx in range(samples)]
 
 
 def ensure_target() -> Path:
@@ -92,7 +90,9 @@ def plot_pitch_tracks(
     dominant_times = [idx * win_hop for idx in range(len(dominant))]
     fig, ax = plt.subplots(figsize=(10, 4.5), constrained_layout=True)
     ax.plot(times, pitches, label="YIN pitch", linewidth=1.5)
-    ax.plot(dominant_times, dominant, label="Dominant frequency", linewidth=1.0, alpha=0.8)
+    ax.plot(
+        dominant_times, dominant, label="Dominant frequency", linewidth=1.0, alpha=0.8
+    )
     ax.set_title("Pitch and Dominant Frequency")
     ax.set_xlabel("Time (s)")
     ax.set_ylabel("Frequency (Hz)")
