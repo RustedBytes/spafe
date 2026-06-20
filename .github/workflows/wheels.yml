@@ -93,7 +93,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     environment:
       name: pypi
-      url: https://pypi.org/p/spafe
+      url: https://pypi.org/p/spafe-rs
     permissions:
       actions: read
       id-token: write

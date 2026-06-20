@@ -3,7 +3,7 @@ requires = ["maturin>=1.8,<2"]
 build-backend = "maturin"
 
 [project]
-name = "spafe"
+name = "spafe-rs"
 version = "0.1.0"
 description = "Rust port of the spafe audio feature extraction library and jenellefeather/chcochleagram"
 readme = "README.md"
